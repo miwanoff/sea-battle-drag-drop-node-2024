@@ -5,6 +5,16 @@ const startButton = document.querySelector("#start");
 const turn = document.querySelector("#turn");
 const info = document.querySelector("#info");
 
+let currentPlayer = "user";
+let gameMode = "";
+let playerNum = 0;
+let ready = false;
+let enemyReady = false;
+let allShipsPlaced = false;
+let shotFired = -1;
+
+const socket = io();
+
 let angle = 0;
 let width = 10;
 let gameOver = false;
@@ -15,6 +25,19 @@ let computerHits = [];
 
 let computerSunkShips = [];
 let humanSunkShips = [];
+
+// Отримати номер гравця
+socket.on("player-number", (num) => {
+  if (num === -1) {
+    info.innerHTML = "Sorry, the server is full"; 
+    console.log("playerNum:" + playerNum);
+  } else {
+    playerNum = parseInt(num);
+    if (playerNum === 1) currentPlayer = "enemy";
+
+    console.log("playerNum:" + playerNum);
+  }
+});
 
 function rotate() {
   // const optionShips = gameOptionContainer.children;

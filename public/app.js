@@ -5,6 +5,12 @@ const startButton = document.querySelector("#start");
 const turn = document.querySelector("#turn");
 const info = document.querySelector("#info");
 
+const singlePlayerButton = document.querySelector("#singlePlayerButton");
+const multiPlayerButton = document.querySelector("#multiPlayerButton");
+
+singlePlayerButton.addEventListener("click", startSinglePlayer);
+multiPlayerButton.addEventListener("click", startMultiPlayer);
+
 let currentPlayer = "user";
 let gameMode = "";
 let playerNum = 0;
@@ -29,7 +35,7 @@ let humanSunkShips = [];
 // Отримати номер гравця
 socket.on("player-number", (num) => {
   if (num === -1) {
-    info.innerHTML = "Sorry, the server is full"; 
+    info.innerHTML = "Sorry, the server is full";
     console.log("playerNum:" + playerNum);
   } else {
     playerNum = parseInt(num);
@@ -38,6 +44,16 @@ socket.on("player-number", (num) => {
     console.log("playerNum:" + playerNum);
   }
 });
+
+function startSinglePlayer() {
+  gameMode = "singlePlayer";
+  ships.forEach((ship) => generate("computer", ship));
+  startButton.addEventListener("click", startGameSingle);
+}
+
+function startMultiPlayer() {
+  gameMode = "multiPlayer";
+}
 
 function rotate() {
   // const optionShips = gameOptionContainer.children;
@@ -153,7 +169,7 @@ function generate(user, ship, startId) {
 }
 
 //generate(ship3);
-ships.forEach((ship) => generate("computer", ship));
+//ships.forEach((ship) => generate("computer", ship));
 
 let draggedShip;
 
@@ -277,7 +293,7 @@ function handleClick(event) {
   setTimeout(computerGo, 2000);
 }
 
-function startGame() {
+function startGameSingle() {
   if (gameOptionContainer.children.length != 0) {
     info.innerHTML = "Place all your ships!";
   } else {
@@ -293,7 +309,7 @@ function startGame() {
   info.textContent = "The game has started!";
 }
 
-startButton.addEventListener("click", startGame);
+//startButton.addEventListener("click", startGame);
 
 function checkScore(user, userHits, userSunkShips) {
   function checkShip(shipName, shipLength) {

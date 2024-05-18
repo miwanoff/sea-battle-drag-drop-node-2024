@@ -57,17 +57,20 @@ function startMultiPlayer() {
   // Інший гравець приєднався або від'єднався
   socket.on("player-connection", (num) => {
     console.log(`Player number ${num} has connected or disconnected`);
-    //playerConnectedOrDisconnected(num);
+    playerConnectedOrDisconnected(num);
   });
 }
+function playerConnectedOrDisconnected(num) {
+  let player = `.p${parseInt(num) + 1}`;
+  document
+    .querySelector(`${player} .connected span`)
+    .classList.toggle("green");
+  if (parseInt(num) === playerNum)
+    document.querySelector(player).style.fontWeight = "bold";
+}
+
 
 function rotate() {
-  // const optionShips = gameOptionContainer.children;
-  //console.log(optionShips);
-  //   for (const ship of optionShips) {
-  //     console.log(ship.className);
-  //     ship.style.transform = "rotate(90deg)";
-  //   }
   const optionShips = Array.from(gameOptionContainer.children);
   angle = angle === 0 ? 90 : 0;
   optionShips.forEach(

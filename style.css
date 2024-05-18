@@ -1,0 +1,83 @@
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1 {
+  color: #1022ee;
+  text-align: center;
+}
+
+.container {
+  margin-left: 20px;
+}
+
+#game-option {
+  display: flex;
+  width: 500px;
+  height: 100px;
+  background-color: gold;
+  padding: 20px;
+  margin: 20px;
+  align-items: center;
+  gap: 10px;
+}
+
+#game-boards {
+  width: 500px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.game-board {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ship {
+  display: flex;
+}
+
+.block {
+  width: 20px;
+  height: 20px;
+  border: dotted gray 1px;
+}
+
+.deck {
+  width: 20px;
+  height: 20px;
+  border: dotted gray 1px;
+}
+
+.deck-one {
+  background-color: #ed1a1a;
+}
+
+.deck-three {
+  background-color: #72ed1a;
+}
+
+.hover {
+  background-color: gold;
+}
+
+.empty {
+  background-color: rgb(255, 255, 255) !important;
+}
+
+.boom {
+  background-image: url(./images/Cross.png) !important;
+  background-size: cover;
+}
+
+#computer .block {
+  background-color: pink;
+}

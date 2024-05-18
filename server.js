@@ -34,7 +34,10 @@ io.on("connection", (socket) => {
   if (playerIndex === -1) return;
   
   console.log(`player ${playerIndex} has connected`);
-  
+
   connections[playerIndex] = false;
+
+  // Оповістити всіх, який номер гравця щойно підключився
+  socket.broadcast.emit("player-connection", playerIndex);
 
 });

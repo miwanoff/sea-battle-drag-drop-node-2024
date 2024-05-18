@@ -53,6 +53,12 @@ function startMultiPlayer() {
       console.log("playerNum:" + playerNum);
     }
   });
+
+  // Інший гравець приєднався або від'єднався
+  socket.on("player-connection", (num) => {
+    console.log(`Player number ${num} has connected or disconnected`);
+    //playerConnectedOrDisconnected(num);
+  });
 }
 
 function rotate() {

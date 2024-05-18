@@ -1,0 +1,29 @@
+{
+  "name": "sea-battle-drag-drop-2023",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server",
+    "dev": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miwanoff/sea-battle-drag-drop-node-2024.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/miwanoff/sea-battle-drag-drop-node-2024/issues"
+  },
+  "homepage": "https://github.com/miwanoff/sea-battle-drag-drop-node-2024#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

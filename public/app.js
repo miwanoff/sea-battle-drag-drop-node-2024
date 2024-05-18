@@ -19,7 +19,7 @@ let enemyReady = false;
 let allShipsPlaced = false;
 let shotFired = -1;
 
-const socket = io();
+// const socket = io();
 
 let angle = 0;
 let width = 10;
@@ -32,19 +32,6 @@ let computerHits = [];
 let computerSunkShips = [];
 let humanSunkShips = [];
 
-// Отримати номер гравця
-socket.on("player-number", (num) => {
-  if (num === -1) {
-    info.innerHTML = "Sorry, the server is full";
-    console.log("playerNum:" + playerNum);
-  } else {
-    playerNum = parseInt(num);
-    if (playerNum === 1) currentPlayer = "enemy";
-
-    console.log("playerNum:" + playerNum);
-  }
-});
-
 function startSinglePlayer() {
   gameMode = "singlePlayer";
   ships.forEach((ship) => generate("computer", ship));
@@ -53,6 +40,19 @@ function startSinglePlayer() {
 
 function startMultiPlayer() {
   gameMode = "multiPlayer";
+  const socket = io();
+  // Отримати номер гравця
+  socket.on("player-number", (num) => {
+    if (num === -1) {
+      info.innerHTML = "Sorry, the server is full";
+      console.log("playerNum:" + playerNum);
+    } else {
+      playerNum = parseInt(num);
+      if (playerNum === 1) currentPlayer = "enemy";
+
+      console.log("playerNum:" + playerNum);
+    }
+  });
 }
 
 function rotate() {

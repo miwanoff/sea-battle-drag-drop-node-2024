@@ -19,7 +19,6 @@ let enemyReady = false;
 let allShipsPlaced = false;
 let shotFired = -1;
 
-
 let angle = 0;
 let width = 10;
 let gameOver = false;
@@ -50,6 +49,8 @@ function startMultiPlayer() {
       if (playerNum === 1) currentPlayer = "enemy";
 
       console.log("playerNum:" + playerNum);
+      // Отримати статус іншого гравця
+      socket.emit("check-players");
     }
   });
 
@@ -58,17 +59,62 @@ function startMultiPlayer() {
     console.log(`Player number ${num} has connected or disconnected`);
     playerConnectedOrDisconnected(num);
   });
+
+  // Готовність противника
+  socket.on("enemy-ready", (num) => {
+    enemyReady = true;
+    playerReady(num);
+    if (ready) playGameMulti(socket);
+  });
+
+  // Перевірка статусу гравця
+  socket.on("check-players", (players) => {
+    players.forEach((p, i) => {
+      if (p.connected) playerConnectedOrDisconnected(i);
+      if (p.ready) {
+        playerReady(i);
+        if (i !== playerNum) enemyReady = true;
+      }
+    });
+  });
+
+  // Кнопка Start Game для Multi Player
+  startButton.addEventListener("click", () => {
+    if (allShipsPlaced) playGameMulti(socket);
+    else info.innerHTML = "Please place all ships";
+  });
+
+  // Логіка для гри на двох гравців
+  function playGameMulti(socket) {
+    // if (isGameOver) return;
+    if (!ready) {
+      ready = true;
+      socket.emit("player-ready");
+      playerReady(playerNum);
+      info.innerHTML = "Game started";
+    }
+  }
+
+  function playerReady(num) {
+    let player = `.p${parseInt(num) + 1}`;
+    document.querySelector(`${player} .ready span`).classList.toggle("green");
+    if (enemyReady) {
+      if (currentPlayer === "user") {
+        turn.innerHTML = "Your Go";
+      }
+      if (currentPlayer === "enemy") {
+        turn.innerHTML = "Enemy's Go";
+      }
+    }
+  }
 }
 
 function playerConnectedOrDisconnected(num) {
   let player = `.p${parseInt(num) + 1}`;
-  document
-    .querySelector(`${player} .connected span`)
-    .classList.toggle("green");
+  document.querySelector(`${player} .connected span`).classList.toggle("green");
   if (parseInt(num) === playerNum)
     document.querySelector(player).style.fontWeight = "bold";
 }
-
 
 function rotate() {
   const optionShips = Array.from(gameOptionContainer.children);
@@ -162,12 +208,11 @@ function generate(user, ship, startId) {
     });
   } else {
     if (user === "computer") generate(user, ship);
-    if (user === "human") notDropped = true;  }
+    if (user === "human") notDropped = true;
+  }
 
   console.log(shipBlocks);
 }
-
-
 
 let draggedShip;
 
@@ -200,6 +245,7 @@ function dropShip(event) {
   generate("human", ship, startID);
   if (!notDropped) {
     draggedShip.remove();
+    if (!gameOptionContainer.querySelector(".ship")) allShipsPlaced = true;
   }
 }
 
@@ -306,7 +352,6 @@ function startGameSingle() {
   turn.textContent = "You Go!";
   info.textContent = "The game has started!";
 }
-
 
 function checkScore(user, userHits, userSunkShips) {
   function checkShip(shipName, shipLength) {

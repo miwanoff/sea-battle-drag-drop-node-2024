@@ -45,4 +45,21 @@ io.on("connection", (socket) => {
     // Оповістити всіх, який номер гравця щойно від'єднався
     socket.broadcast.emit("player-connection", playerIndex);
   });
+
+  // Підтримка готовності гравця
+  socket.on("player-ready", () => {
+    socket.broadcast.emit("enemy-ready", playerIndex);
+    connections[playerIndex] = true;
+  });
+
+  // Перевірка приєднання гравця
+  socket.on("check-players", () => {
+    const players = [];
+    for (const i in connections) {
+      connections[i] === null
+        ? players.push({ connected: false, ready: false })
+        : players.push({ connected: true, ready: connections[i] });
+    }
+    socket.emit("check-players", players);
+  });
 });

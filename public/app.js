@@ -19,7 +19,6 @@ let enemyReady = false;
 let allShipsPlaced = false;
 let shotFired = -1;
 
-// const socket = io();
 
 let angle = 0;
 let width = 10;
@@ -60,6 +59,7 @@ function startMultiPlayer() {
     playerConnectedOrDisconnected(num);
   });
 }
+
 function playerConnectedOrDisconnected(num) {
   let player = `.p${parseInt(num) + 1}`;
   document
@@ -128,10 +128,8 @@ function getValidity(allBoardBlocks, isHorisontal, startIndex, ship) {
 
   for (let i = 0; i < ship.length; i++) {
     if (isHorisontal) {
-      //console.log(allBoardBlocks[randomStartIndex + i]);
       shipBlocks.push(allBoardBlocks[Number(validStart) + i]);
     } else {
-      //console.log(allBoardBlocks[Number(randomStartIndex) + i * width]);
       shipBlocks.push(allBoardBlocks[Number(validStart) + i * width]);
     }
   }
@@ -144,9 +142,6 @@ function getValidity(allBoardBlocks, isHorisontal, startIndex, ship) {
 }
 
 function generate(user, ship, startId) {
-  //   const allBoardBlocks = document.querySelectorAll("#computer div");
-  //   let randomBoolean = Math.random() < 0.5;
-  //   isHorisontal = randomBoolean;
   const allBoardBlocks = document.querySelectorAll(`#${user} div`);
   let randomBoolean = Math.random() < 0.5;
   isHorisontal = user === "human" ? angle === 0 : randomBoolean;
@@ -167,18 +162,12 @@ function generate(user, ship, startId) {
     });
   } else {
     if (user === "computer") generate(user, ship);
-    if (user === "human") notDropped = true;
-  }
+    if (user === "human") notDropped = true;  }
 
   console.log(shipBlocks);
-  //   shipBlocks.forEach((shipBlock) => {
-  //     shipBlock.classList.add(ship.name);
-  //     shipBlock.classList.add("taken");
-  //   });
 }
 
-//generate(ship3);
-//ships.forEach((ship) => generate("computer", ship));
+
 
 let draggedShip;
 
@@ -318,7 +307,6 @@ function startGameSingle() {
   info.textContent = "The game has started!";
 }
 
-//startButton.addEventListener("click", startGame);
 
 function checkScore(user, userHits, userSunkShips) {
   function checkShip(shipName, shipLength) {

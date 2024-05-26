@@ -87,12 +87,11 @@ function startMultiPlayer() {
     playGameMulti(socket);
   });
 
-    // Відповідь на отримане сповіщення про постріл
-    socket.on("fire-reply", (classList) => {
-      revealSquare(classList);
-      playGameMulti(socket);
-    });
-  
+  // Відповідь на отримане сповіщення про постріл
+  socket.on("fire-reply", (classList) => {
+    revealSquare(classList);
+    playGameMulti(socket);
+  });
 
   // Логіка для гри на двох гравців
   function playGameMulti(socket) {
@@ -117,6 +116,35 @@ function startMultiPlayer() {
       }
     }
   }
+
+  function revealSquare(classList) {
+    if (!gameOver) {
+      const enemySquare = document.querySelector(
+        `#enemy div[id='block-${shotFired}']`
+      );
+      console.log("shotFired " + shotFired);
+      const obj = Object.values(classList);
+      
+      console.log(obj);
+      if (obj.includes("taken")) {
+        enemySquare.classList.add("boom");
+        info.innerHTML = "You hit enemys ship!";
+        turn.textContent = "Enemy's Go";
+        let classes = Array.from(obj);
+        classes = classes.filter(
+          (className) =>
+            className !== "block" && className !== "boom" && className !== "taken"
+        );
+        humanHits.push(...classes);
+        console.log(humanHits);
+        checkScore("human", humanHits, humanSunkShips);
+      } else {
+        info.textContent = "You missed it";
+        enemySquare.classList.add("empty");
+      }
+    }
+  }
+  
 
   // Кнопка Start Game для Multi Player
   startButton.addEventListener("click", () => {
@@ -293,51 +321,53 @@ function highlight(startIndex, ship) {
   }
 }
 
-function enemyGo() {
+function enemyGo(square) {
   if (!gameOver) {
     turn.textContent = "enemys Go!";
-    info.textContent = "enemys is thinking...";
 
-    setTimeout(() => {
-      let rand = Math.floor(Math.random() * width * width);
-      const allBoardsBlocks = document.querySelectorAll("#human div");
+    // setTimeout(() => {
+    // let rand = Math.floor(Math.random() * width * width);
+    if (gameMode === "singlePlayer")
+      square = Math.floor(Math.random() * width * width);
 
-      if (
-        allBoardsBlocks[rand].classList.contains("taken") &&
-        allBoardsBlocks[rand].classList.contains("boom")
-      ) {
+    const allBoardsBlocks = document.querySelectorAll("#human div");
+
+    if (
+      allBoardsBlocks[square].classList.contains("taken") &&
+      allBoardsBlocks[square].classList.contains("boom")
+    ) {
+      if (gameMode === "singlePlayer") {
         enemyGo();
-        return;
-      } else if (
-        allBoardsBlocks[rand].classList.contains("taken") &&
-        !allBoardsBlocks[rand].classList.contains("boom")
-      ) {
-        allBoardsBlocks[rand].classList.add("boom");
-        info.textContent = "enemy hit your ship!";
-        let classes = Array.from(allBoardsBlocks[rand].classList);
-        classes = classes.filter(
-          (className) =>
-            className !== "block" &&
-            className !== "boom" &&
-            className !== "taken"
-        );
-        enemyHits.push(...classes);
-        console.log(enemyHits);
-        checkScore("enemy", enemyHits, enemySunkShips);
-      } else {
-        info.textContent = "Nothing hit";
-        allBoardsBlocks[rand].classList.add("empty");
+        //return;
       }
-    }, 3000);
-    setTimeout(() => {
-      humanTurn = true;
-      turn.textContent = "Your Go!";
-      info.textContent = "Your turn!";
-      const allBoardBlocks = document.querySelectorAll("#enemy div");
-      allBoardBlocks.forEach((block) =>
-        block.addEventListener("click", handleClick)
+    } else if (
+      allBoardsBlocks[square].classList.contains("taken") &&
+      !allBoardsBlocks[square].classList.contains("boom")
+    ) {
+      allBoardsBlocks[square].classList.add("boom");
+      info.textContent = "enemy hit your ship!";
+      let classes = Array.from(allBoardsBlocks[square].classList);
+      classes = classes.filter(
+        (className) =>
+          className !== "block" && className !== "boom" && className !== "taken"
       );
-    }, 6000);
+      enemyHits.push(...classes);
+      console.log(enemyHits);
+      checkScore("enemy", enemyHits, enemySunkShips);
+    } else {
+      info.textContent = "Nothing hit";
+      allBoardsBlocks[square].classList.add("empty");
+    }
+    // }, 3000);
+    // setTimeout(() => {
+    humanTurn = true;
+    turn.textContent = "Your Go!";
+    info.textContent = "Your turn!";
+    // const allBoardBlocks = document.querySelectorAll("#enemy div");
+    // allBoardBlocks.forEach((block) =>
+    //   block.addEventListener("click", handleClick)
+    // );
+    // }, 6000);
   }
 }
 

@@ -62,4 +62,19 @@ io.on("connection", (socket) => {
     }
     socket.emit("check-players", players);
   });
+
+  // Обробка сповіщення про постріл
+  socket.on("fire", (id) => {
+    console.log(`Shot fired from ${playerIndex}`, id);
+
+    // Сповістити інших гравців
+    socket.broadcast.emit("fire", id);
+  });
+
+  // Постріл-відповідь
+  socket.on("fire-reply", (classList) => {
+    console.log(classList);
+    // Сповістити інших гравців
+    socket.broadcast.emit("fire-reply", classList);
+  });
 });

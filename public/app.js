@@ -94,7 +94,17 @@ function startMultiPlayer() {
     enemyGo(id);
     const square = document.querySelectorAll("#human div")[id];
     socket.emit("fire-reply", square.classList);
-    playGameMulti(socket);
+    //playGameMulti(socket);
+    document.querySelectorAll("#enemy div").forEach((block) => {
+      block.addEventListener("click", () => {
+        console.log("currentPlayer" + currentPlayer);
+        if (ready && enemyReady) {
+          shotFired = parseInt(block.id.substring(6));
+          console.log("shotFired" + shotFired);
+          socket.emit("fire", shotFired);
+        }
+      });
+    });
   });
 
   // Відповідь на отримане сповіщення про постріл
@@ -147,6 +157,10 @@ function startMultiPlayer() {
         turn.textContent = "Enemy's Go";
         enemySquare.classList.add("empty");
       }
+      const allBoardBlocks = document.querySelectorAll("#enemy div");
+      allBoardBlocks.forEach((block) =>
+        block.replaceWith(block.cloneNode(true))
+      );
     }
   }
 

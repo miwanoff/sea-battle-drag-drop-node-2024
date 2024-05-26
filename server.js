@@ -77,4 +77,11 @@ io.on("connection", (socket) => {
     // Сповістити інших гравців
     socket.broadcast.emit("fire-reply", classList);
   });
+
+  // Обмеження в часі для гравця
+  setTimeout(() => {
+    connections[playerIndex] = null;
+    socket.emit("timeout");
+    socket.disconnect();
+  }, 600000); // 10 хвилин - ліміт для гравця
 });

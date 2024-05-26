@@ -113,6 +113,11 @@ function startMultiPlayer() {
     playGameMulti(socket);
   });
 
+  // Ліміт часу досягнуто
+  socket.on("timeout", () => {
+    info.innerHTML = "You have reached the 10 minute limit";
+  });
+
   // Логіка для гри на двох гравців
   function playGameMulti(socket) {
     // if (isGameOver) return;

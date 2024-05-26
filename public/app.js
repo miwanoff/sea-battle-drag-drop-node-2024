@@ -65,6 +65,16 @@ function startMultiPlayer() {
   socket.on("enemy-ready", (num) => {
     enemyReady = true;
     playerReady(num);
+
+    if (enemyReady) {
+      if (currentPlayer === "user") {
+        turn.innerHTML = "Your Go";
+      }
+      if (currentPlayer === "enemy") {
+        turn.innerHTML = "Enemy's Go";
+      }
+    }
+
     if (ready) playGameMulti(socket);
   });
 
@@ -107,14 +117,6 @@ function startMultiPlayer() {
   function playerReady(num) {
     let player = `.p${parseInt(num) + 1}`;
     document.querySelector(`${player} .ready span`).classList.toggle("green");
-    if (enemyReady) {
-      if (currentPlayer === "user") {
-        turn.innerHTML = "Your Go";
-      }
-      if (currentPlayer === "enemy") {
-        turn.innerHTML = "Enemy's Go";
-      }
-    }
   }
 
   function revealSquare(classList) {
@@ -124,7 +126,7 @@ function startMultiPlayer() {
       );
       console.log("shotFired " + shotFired);
       const obj = Object.values(classList);
-      
+
       console.log(obj);
       if (obj.includes("taken")) {
         enemySquare.classList.add("boom");
@@ -133,18 +135,20 @@ function startMultiPlayer() {
         let classes = Array.from(obj);
         classes = classes.filter(
           (className) =>
-            className !== "block" && className !== "boom" && className !== "taken"
+            className !== "block" &&
+            className !== "boom" &&
+            className !== "taken"
         );
         humanHits.push(...classes);
         console.log(humanHits);
         checkScore("human", humanHits, humanSunkShips);
       } else {
         info.textContent = "You missed it";
+        turn.textContent = "Enemy's Go";
         enemySquare.classList.add("empty");
       }
     }
   }
-  
 
   // Кнопка Start Game для Multi Player
   startButton.addEventListener("click", () => {
@@ -362,7 +366,7 @@ function enemyGo(square) {
     // setTimeout(() => {
     humanTurn = true;
     turn.textContent = "Your Go!";
-    info.textContent = "Your turn!";
+
     // const allBoardBlocks = document.querySelectorAll("#enemy div");
     // allBoardBlocks.forEach((block) =>
     //   block.addEventListener("click", handleClick)
